@@ -1,13 +1,20 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 morgan.token('body', (req) => {
     if (req.body) {
         return JSON.stringify(req.body)
     }
 })
+
+//make express run static content
+app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan(':method :url :response-time :body '))
+
+//handle cors
+app.use(cors())
 
 let persons = [
     {
