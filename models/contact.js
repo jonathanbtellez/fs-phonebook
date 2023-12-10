@@ -16,8 +16,8 @@ mongoose.connect(url)
 
 // Create a schema to save an specify data
 const contactSchema = new mongoose.Schema({
-    name: { type: String, minLength: 5, required: true, unique: true },
-    number: { type: String, minLength: 7, required: true, unique: true },
+    name: { type: String, minLength: 3, required: true, unique: true },
+    number: { type: String, minLength: 8, required: true, unique: true },
 })
 
 //Add unique validation to the schema
