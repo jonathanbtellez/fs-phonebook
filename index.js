@@ -30,33 +30,22 @@ app.get('/api/v1/persons', (req, res) => {
 app.post('/api/v1/persons', (req, res) => {
     const body = req.body
 
-    if (!body.name) {
-        res.status(400).send({ error: "Number is required" }).end();
-        return
+    if (body.name === undefined) {
+        return res.status(400).json({ error: 'name is missing' })
     }
 
-    if (!body.number) {
-        res.status(400).send({ error: "Number is required" }).end();
-        return
+    if (body.number === undefined) {
+        return res.status(400).json({ error: 'number is missing' })
     }
 
-    const isNameUnique = persons.find(person => person.name === body.name)
-    const isNumberUnique = persons.find(person => person.number === Number(body.number))
-
-    if (isNameUnique) return res.status(400).send({ error: "Name must be unique" }).end();
-    if (isNumberUnique) return res.status(400).send({ error: "Number must be unique" }).end();
-
-
-    const person = {
-        id: Math.floor(Math.random() * 10000),
+    const contact = new Contact({
         name: body.name,
-        number: body.number
-    }
+        number: body.number,
+    })
 
-
-    persons = [...persons, person]
-
-    res.json(person)
+    contact.save().then(savedContact => {
+        res.json(savedContact)
+    })
 })
 
 app.get('/api/v1/person/:id', (req, res) => {
