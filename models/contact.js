@@ -1,36 +1,49 @@
-const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-console */
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-const url = process.env.MONGODB_URI
+const url = process.env.MONGODB_URI;
 
-console.log('connecting to', url)
+console.log('connecting to', url);
 
 mongoose.connect(url)
-    .then(result => {
-        console.log('connected to MongoDB')
-    })
-    .catch((error) => {
-        console.log(url)
-        console.log('error connecting to MongoDB:', error.message)
-    })
+  .then(() => {
+    console.log('connected to MongoDB');
+  })
+  .catch((error) => {
+    console.log(url);
+    console.log('error connecting to MongoDB:', error.message);
+  });
 
 // Create a schema to save an specify data
 const contactSchema = new mongoose.Schema({
-    name: { type: String, minLength: 3, required: true, unique: true },
-    number: { type: String, minLength: 8, required: true, unique: true },
-})
+  name: {
+    type: String,
+    minLength: 3,
+    required: true,
+    unique: true,
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    required: true,
+    unique: true,
+  },
+});
 
-//Add unique validation to the schema
-contactSchema.plugin(uniqueValidator)
+// Add unique validation to the schema
+contactSchema.plugin(uniqueValidator);
 
 // Set a custom schema rsponse
 contactSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-})
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
 // Bind data with modal and export
-module.exports = mongoose.model('Contact', contactSchema)
+module.exports = mongoose.model('Contact', contactSchema);
