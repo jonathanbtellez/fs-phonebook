@@ -82,10 +82,17 @@ app.delete('/api/v1/persons/:id', (req, res, next) => {
 })
 
 app.get('/api/v1/info', (req, res) => {
-    res.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
-        <p>${new Date}</p>
-    `)
+    let persons = []
+    Contact.find({}).then(contacts => {
+        persons = [...contacts]
+    })
+
+    setTimeout(() => {
+        res.send(`
+            <p>Phonebook has info for ${persons.length} people</p>
+            <p>${new Date}</p>
+        `)
+    }, 500)
 })
 
 const unknownEndpoint = (request, response) => {
