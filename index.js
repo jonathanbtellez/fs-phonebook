@@ -58,11 +58,12 @@ app.get('/api/v1/persons/:id', (req, res) => {
 })
 
 
-app.delete('/api/v1/persons/:id', (req, res) => {
+app.delete('/api/v1/persons/:id', (req, res, next) => {
     Contact.findByIdAndDelete(req.params.id)
         .then(result => {
             res.status(204).end()
         })
+        .catch(error => next(error))
 })
 
 app.get('/api/v1/info', (req, res) => {
@@ -71,6 +72,25 @@ app.get('/api/v1/info', (req, res) => {
         <p>${new Date}</p>
     `)
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+// Use error handler
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
