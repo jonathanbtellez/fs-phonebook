@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 const url = process.env.MONGODB_URI
 
@@ -15,9 +16,12 @@ mongoose.connect(url)
 
 // Create a schema to save an specify data
 const contactSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: { type: String, minLength: 5, required: true, unique: true },
+    number: { type: String, minLength: 7, required: true, unique: true },
 })
+
+//Add unique validation to the schema
+contactSchema.plugin(uniqueValidator)
 
 // Set a custom schema rsponse
 contactSchema.set('toJSON', {
