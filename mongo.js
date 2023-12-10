@@ -13,6 +13,7 @@ const url =
 
 mongoose.connect(url)
 
+
 const contactSchema = new mongoose.Schema({
     name: String,
     number: String,
