@@ -49,12 +49,27 @@ app.post('/api/v1/persons', (req, res) => {
 })
 
 app.get('/api/v1/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-    if (!person) {
-        res.status(404).end()
-        return
+    Contact.findById(req.params.id).then(contact => {
+        if (contact) {
+            res.json(contact)
+        } else {
+            res.status(404).end()
+        }
+    }).catch(error => next(error))
+})
+
+app.put('/api/v1/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    const contact = {
+        name: body.name,
+        number: body.number
     }
+    Contact.findByIdAndUpdate(req.params.id, contact, { new: true })
+        .then(updatedContact => {
+            res.json(updatedContact)
+        })
+        .catch(error => next(error))
 })
 
 
